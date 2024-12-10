@@ -44,4 +44,5 @@ def print_document():
     return render_template("message.html", filename=file.filename, status="Successfully sent"), 200
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG, port=APP_PORT)
+    # run on 0.0.0.0 to make externally visable
+    app.run("0.0.0.0", debug=DEBUG, port=APP_PORT)
