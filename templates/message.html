@@ -1,4 +1,94 @@
-<p>Job for {{ filename }}</p>
-<p>Status: {{ status }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Job Status</title>
+    <style>
+        /* Calvin Maroon and Gold Colors */
+        :root {
+            --maroon: #6d1a36;
+            --gold: #ffcc33;
+            --light-gray: #f4f4f4;
+            --dark-gray: #333;
+        }
 
-<a href="/"><button>Print Another Document</button></a>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .status-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        h1 {
+            color: var(--maroon);
+            margin-bottom: 15px;
+        }
+
+        .status-message {
+            font-size: 18px;
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: var(--maroon);
+            color: white;
+            font-size: 16px;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            background-color: var(--gold);
+            color: var(--maroon);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <h1>Print Job Status</h1>
+        <p class="status-message">Your file <span class="highlight">{{ filename }}</span> has been processed.</p>
+        <p class="status-message">Current Status: <span class="highlight">{{ status }}</span></p>
+
+        <div class="button-container">
+            <a href="{{ url_for('index') }}" class="button">Return to Home</a>
+        </div>
+
+        <p class="footer">Text2Touch Senior Design Team 2025 | Calvin University</p>
+    </div>
+</body>
+</html>

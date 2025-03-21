@@ -2,16 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Text2Type Web Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask CUPS Interface</title>
+    <style>
+        /* Calvin Maroon and Gold Colors */
+        :root {
+            --maroon: #6d1a36;
+            --gold: #ffcc33;
+            --light-gray: #f4f4f4;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--maroon);
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--light-gray);
+            margin-bottom: 10px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+            color: var(--maroon);
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button {
+            background-color: var(--gold);
+            color: var(--maroon);
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--light-gray);
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--light-gray);
+        }
+    </style>
 </head>
 <body>
-    <h1>Text2Type Web Interface</h1>
+    <div class="container">
+        <h1>Welcome to the Braille Typewriter Demo</h1>
 
-    <form action="/print" method="post" enctype="multipart/form-data">
-        <label for="file">Choose file:</label>
-        <input type="file" id="file" name="file" accept="application/pdf" required>
-        <br>
-        <button type="submit">Print</button>
-    </form>
+        <form action="/print" method="post" enctype="multipart/form-data">
+            <label for="file">Choose a file to print (only currently accepts .txt format):</label>
+            <input type="file" id="file" name="file" accept=".txt" required>
+            <button type="submit">Print</button>
+        </form>
+
+        <p class="footer">Created by Text2Touch Senior Design Team 2025 | Calvin University</p>
+    </div>
 </body>
 </html>
+

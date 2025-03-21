@@ -7,7 +7,7 @@
 ##   python3 app.py
 #########################
 from flask import Flask, render_template, request
-import requests
+##import requests
 
 APP_PORT = 8080
 IPP_SERVER_PORT = 5000
