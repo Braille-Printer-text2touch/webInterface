@@ -6,14 +6,18 @@
 ## Run with 
 ##   python3 app.py
 #########################
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 ##import requests
+from driver_info import BrailleDriverInfo
 
 APP_PORT = 8080
 IPP_SERVER_PORT = 5000
 DEBUG = True
+BRAILLE_DRIVER_PIPE = "/var/run/user/1000/text2touch_pipe"
 
 app = Flask(__name__)
+
+driver_info = BrailleDriverInfo()
 
 @app.route('/')
 def index():
@@ -31,18 +35,26 @@ def print_document():
         return "No selected file", 400
 
     try:
-        resp = requests.post(f"http://localhost:{IPP_SERVER_PORT}", files=dict(file=request.files["file"]))
-        if resp.status_code == 200:
-            app.logger.info("Request sent to IPP Server successfully")
-        else:
-            app.logger.error(f"Request to IPP Server failed {resp.status_code}")
-            return render_template("message.html", filename=file.filename, status=f"Request to IPP Server failed {resp.status_code}"), resp.status_code
-    except Exception as e:
+        with open(BRAILLE_DRIVER_PIPE, "w") as pipe:
+            pipe.write(request.files["file"])
+    except OSError as e:
         app.logger.error(f"Failed to send request to IPP server: {e}")
-        return render_template("message.html", filename=file.filename, status="Failed to send request to IPP server. Perhaps it is not running?"), 500
+        return render_template("message.html", filename=file.filename, status=f"Request to IPP Server failed {resp.status_code}"), resp.status_code
 
     return render_template("message.html", filename=file.filename, status="Successfully sent"), 200
 
+messages: list[str] = []
+
+def addMessage(msg: str, priority: int) -> None:
+    messages.append(msg)
+
+@app.route('/admin')
+def admin():
+    return jsonify(messages)
+
 if __name__ == '__main__':
+    driver_info.handle_message = addMessage
+    driver_info.run()
+
     # run on 0.0.0.0 to make externally visable
     app.run("0.0.0.0", debug=DEBUG, port=APP_PORT)

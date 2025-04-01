@@ -5,6 +5,7 @@
 ############################
 import posix_ipc
 from typing import Callable
+from beartype import beartype
 
 class BrailleDriverInfo:
     QUEUE_NAME = "/text2touch-driver-info"
@@ -41,6 +42,7 @@ class BrailleDriverInfo:
         return self.__handle_message_cb
         
     @handle_message.setter
+    @beartype # ensure proper callback type is assigned
     def handle_message(self, callback: Callable[[str, int], None]) -> None:
         self.__handle_message_cb = callback
 
