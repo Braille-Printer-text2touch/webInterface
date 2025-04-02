@@ -6,6 +6,7 @@
 import posix_ipc
 from typing import Callable
 from beartype import beartype
+import threading
 
 class BrailleDriverInfo:
     QUEUE_NAME = "/text2touch-driver-info"
@@ -19,11 +20,10 @@ class BrailleDriverInfo:
         # default handle callback is just nothing
         self.__handle_message_cb: Callable[[str, int], None] = lambda msg, priority: None
 
-    def run(self) -> None:
+    def message_listener(self) -> None:
         try:
             while True:
-                self.__handle_message(self.mq.receive())   
-
+                self.__handle_message(self.mq.receive())
         except KeyboardInterrupt:
             print("\nExiting...")
             try:
@@ -31,7 +31,11 @@ class BrailleDriverInfo:
                 posix_ipc.unlink_message_queue(self.QUEUE_NAME)
             except posix_ipc.ExistentialError:
                 pass
-    
+
+    def run(self) -> None:
+        listener_thread = threading.Thread(target=self.message_listener, daemon=True)
+        listener_thread.start() 
+
     def __handle_message(self, raw_message: tuple[str, int]) -> None:
         message, priority = raw_message
         self.__handle_message_cb(message.decode(), priority)

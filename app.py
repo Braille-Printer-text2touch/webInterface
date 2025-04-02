@@ -36,7 +36,7 @@ def print_document():
 
     try:
         with open(BRAILLE_DRIVER_PIPE, "w") as pipe:
-            pipe.write(request.files["file"])
+            pipe.write(request.files["file"].read().decode())
     except OSError as e:
         app.logger.error(f"Failed to send request to IPP server: {e}")
         return render_template("message.html", filename=file.filename, status=f"Request to IPP Server failed {resp.status_code}"), resp.status_code
