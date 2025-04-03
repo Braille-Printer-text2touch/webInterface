@@ -1,0 +1,17 @@
+/* Default logo size */
+.logo {
+    width: 150px; /* Adjust size */
+    height: auto;
+    display: block;
+    margin: 0; /* Remove auto centering to move it to the left */
+    position: absolute;
+    top: 20px; /* Add margin from top */
+    left: 20px; /* Add margin from left */
+}
+
+
+/* .logo {
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+} */
