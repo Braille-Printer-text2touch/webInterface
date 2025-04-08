@@ -15,9 +15,9 @@ IPP_SERVER_PORT = 5000
 DEBUG = True
 BRAILLE_DRIVER_PIPE = "/var/run/user/1000/text2touch_pipe"
 
-app = Flask(__name__)
+DRIVER_IPC = False # set to True if using posix message queue for driver info
 
-driver_info = BrailleDriverInfo()
+app = Flask(__name__)
 
 @app.route('/')
 def index():
@@ -53,8 +53,12 @@ def admin():
     return jsonify(messages)
 
 if __name__ == '__main__':
-    driver_info.handle_message = addMessage
-    driver_info.run()
+    if DRIVER_IPC:
+        # set up message queue
+        driver_info = BrailleDriverInfo()
+        # set up callback to add messages to the list
+        driver_info.handle_message = addMessage
+        driver_info.run()
 
     # run on 0.0.0.0 to make externally visable
     app.run("0.0.0.0", debug=DEBUG, port=APP_PORT)
