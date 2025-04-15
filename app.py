@@ -8,14 +8,14 @@
 #########################
 from flask import Flask, render_template, request, jsonify
 ##import requests
-from driver_info import BrailleDriverInfo
+from DriverCommunicator import BrailleDriverCommunicator
 
 APP_PORT = 8080
 IPP_SERVER_PORT = 5000
 DEBUG = True
 BRAILLE_DRIVER_PIPE = "/var/run/user/1000/text2touch_pipe"
 
-DRIVER_IPC = False # set to True if using posix message queue for driver info
+DRIVER_IPC = True # set to True if using posix message queue for driver info
 
 app = Flask(__name__)
 
@@ -45,9 +45,6 @@ def print_document():
 
 messages: list[str] = []
 
-def addMessage(msg: str, priority: int) -> None:
-    messages.append(msg)
-
 @app.route('/admin')
 def admin():
     return jsonify(messages)
@@ -55,10 +52,9 @@ def admin():
 if __name__ == '__main__':
     if DRIVER_IPC:
         # set up message queue
-        driver_info = BrailleDriverInfo()
+        driver_comm = BrailleDriverCommunicator()
         # set up callback to add messages to the list
-        driver_info.handle_message = addMessage
-        driver_info.run()
+        driver_comm.listen_status(messages.append)
 
     # run on 0.0.0.0 to make externally visable
     app.run("0.0.0.0", debug=DEBUG, port=APP_PORT)
