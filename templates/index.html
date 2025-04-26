@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flask CUPS Interface</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../static/js/htmx.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -37,6 +38,11 @@
         Print
       </button>
     </form>
+
+    <button hx-post="/command/next" hx-trigger="click" hx-swap="none"
+    class="block text-center bg-maroon text-white font-bold py-2 px-4 rounded transition hover:bg-gold hover:text-maroon mt-4">
+      Next Document
+    </button> 
 
     <p class="text-lightgray text-sm mt-6">
       Created by Text2Touch Senior Design Team 2025 | Calvin University

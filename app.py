@@ -43,18 +43,36 @@ def print_document():
 
     return render_template("message.html", filename=file.filename, status="Successfully sent"), 200
 
+# set up administrative systems
 messages: list[str] = []
+if DRIVER_IPC:
+    # set up message queue
+    driver_comm = BrailleDriverCommunicator()
+    # set up callback to add messages to the list
+    driver_comm.listen_status(messages.append)
 
 @app.route('/admin')
 def admin():
     return jsonify(messages)
 
-if __name__ == '__main__':
-    if DRIVER_IPC:
-        # set up message queue
-        driver_comm = BrailleDriverCommunicator()
-        # set up callback to add messages to the list
-        driver_comm.listen_status(messages.append)
+COMAMND_LIST = [
+    "next",
+    "stop",
+    "start"
+]
 
+@app.route("/command/<command>", methods=["POST"])
+def command(command: str):
+    if not DRIVER_IPC:
+        return jsonify({"status": "error", "message": "Driver IPC not enabled"}), 500
+
+    if command in COMAMND_LIST:
+        # send command to driver
+        driver_comm.write_cmd(command)
+        return jsonify({"status": "success", "message": "Next command sent to driver"})
+    else:
+        return jsonify({"status": "error", "message": "Invalid command"}), 400
+
+if __name__ == '__main__':
     # run on 0.0.0.0 to make externally visable
-    app.run("0.0.0.0", debug=DEBUG, port=APP_PORT)
+    app.run("0.0.0.0", debug=DEBUG, port=APP_PORT, ssl_context='adhoc')
